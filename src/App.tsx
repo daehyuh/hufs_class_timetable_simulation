@@ -79,6 +79,7 @@ function App() {
   const [exporting, setExporting] = useState(false)
   const [saveModal, setSaveModal] = useState(false)
   const [exploreCollapsed, setExploreCollapsed] = useState(true)
+  const [repoDescription, setRepoDescription] = useState<string>('불러오는 중…')
   const timetableRef = useRef<HTMLDivElement>(null)
 
   const maxPeriod = periods.length
@@ -342,10 +343,21 @@ function App() {
     setSelectedIds([])
   }, [liveCourses])
 
+  useEffect(() => {
+    fetch('https://api.github.com/repos/daehyuh/hufs_class_timetable_simulation')
+      .then(async (res) => {
+        if (!res.ok) throw new Error(`GitHub API ${res.status}`)
+        const data = await res.json()
+        setRepoDescription(data.description || '설명이 없습니다.')
+      })
+      .catch(() => setRepoDescription('설명을 불러오지 못했습니다.'))
+  }, [])
+
   return (
     <div className="page">
       <header className="page-header">
         <h1>한국외대 시간표 시물레이션</h1>
+        <p className="repo-description">{repoDescription}</p>
       </header>
       <section className="panel live-panel">
         <div className="live-grid">
