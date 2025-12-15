@@ -356,7 +356,9 @@ function App() {
   return (
     <div className="page">
       <header className="page-header">
-        <h1>한국외대 시간표 시물레이션</h1>
+        <h1>
+          한국외대 시간표 시물레이션
+        </h1>
         <p className="repo-description">{repoDescription}</p>
       </header>
       <section className="panel live-panel">
@@ -611,7 +613,12 @@ function App() {
                   {timetable.conflicts.size ? `충돌 ${timetable.conflicts.size}` : '충돌 없음'}
                 </span>
               </div>
-              <span className="muted">강좌를 선택하면 자동으로 반영됩니다</span>
+              <span className="muted">
+                한국외대 시간표 시물레이션{' '}
+                <a className="inline-link" href="https://hufs.gdgoc.com" target="_blank" rel="noreferrer">
+                  https://hufs.gdgoc.com
+                </a>
+              </span>
             </div>
             <div className="timetable-scroll">
               <div className="grid">
