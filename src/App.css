@@ -293,6 +293,18 @@ h1 {
   font-size: 0.95rem;
 }
 
+.tiny-note {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.tiny-note a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
 .course-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));

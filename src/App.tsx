@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
+import { Analytics } from '@vercel/analytics/react'
 import html2canvas from 'html2canvas'
 import {
   fetchCourses,
@@ -408,6 +409,17 @@ function App() {
               <div>
                 <p className="subtle">실시간 조회</p>
                 <h2>HUFS 강좌 선택</h2>
+                <p className="tiny-note">
+                  시간표데이터 출처 :{' '}
+                  <a
+                    className="inline-link"
+                    href="https://wis.hufs.ac.kr/src08/jsp/lecture/LECTURE2020L.jsp"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    한국외대 강의/수업정보 사이트
+                  </a>
+                </p>
               </div>
               <div className="stat-chips">
                 <span className="stat-chip">학과 {majors.length}개</span>
@@ -780,6 +792,7 @@ function App() {
         </div>
       </section>
 
+      <Analytics />
     </div>
   )
 }
