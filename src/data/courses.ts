@@ -17,6 +17,7 @@ export type Course = {
   slots: CourseSlot[]
   english?: boolean
   remarks?: string
+  sourceMajor?: string
 }
 
 export const courses: Course[] = [

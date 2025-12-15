@@ -16,6 +16,20 @@
   font-size: clamp(1.6rem, 3vw, 2rem);
 }
 
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.site-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
+
 .inline-link {
   font-size: 0.9rem;
   color: var(--accent);

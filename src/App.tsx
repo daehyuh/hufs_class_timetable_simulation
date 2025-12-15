@@ -69,6 +69,7 @@ function App() {
   const [majors, setMajors] = useState<(MajorOption | FieldOption)[]>([])
   const [selectedMajor, setSelectedMajor] = useState('ATJA1')
   const [liveCourses, setLiveCourses] = useState<CourseRow[]>([])
+  const [liveMajor, setLiveMajor] = useState('')
   const [apiCourses, setApiCourses] = useState<Course[]>([])
   const [loadingMajors, setLoadingMajors] = useState(false)
   const [loadingCourses, setLoadingCourses] = useState(false)
@@ -80,15 +81,24 @@ function App() {
   const [saveModal, setSaveModal] = useState(false)
   const [exploreCollapsed, setExploreCollapsed] = useState(true)
   const [repoDescription, setRepoDescription] = useState<string>('불러오는 중…')
+  const apiCourseIdRef = useRef(100000)
   const timetableRef = useRef<HTMLDivElement>(null)
+  const timetableGridRef = useRef<HTMLDivElement>(null)
 
   const maxPeriod = periods.length
 
-  const displayCourses = useMemo(() => (apiCourses.length ? apiCourses : baseCourses), [apiCourses])
+  const allCourses = useMemo(() => (apiCourses.length ? apiCourses : baseCourses), [apiCourses])
+
+  const displayCourses = useMemo(() => {
+    if (!apiCourses.length) return allCourses
+    return apiCourses.filter(
+      (course) => !course.sourceMajor || course.sourceMajor === selectedMajor
+    )
+  }, [allCourses, apiCourses, selectedMajor])
 
   const selectedCourses = useMemo(
-    () => displayCourses.filter((course) => selectedIds.includes(course.id)),
-    [displayCourses, selectedIds]
+    () => allCourses.filter((course) => selectedIds.includes(course.id)),
+    [allCourses, selectedIds]
   )
 
   const filteredCourses = useMemo(() => {
@@ -196,6 +206,7 @@ function App() {
         majorCode: selectedMajor,
         gubun,
       })
+      setLiveMajor(selectedMajor)
       setLiveCourses(list)
       if (list.length === 0) {
         setApiError('조회된 강좌가 없습니다.')
@@ -253,10 +264,11 @@ function App() {
   }
 
   const exportTimetable = async () => {
-    if (!timetableRef.current || exporting) return
+    const target = timetableGridRef.current ?? timetableRef.current
+    if (!target || exporting) return
     setExporting(true)
     try {
-      const el = timetableRef.current
+      const el = target
       const prevWidth = el.style.width
       const width = Math.max(el.scrollWidth, el.clientWidth, 1200)
       const height = el.scrollHeight
@@ -327,21 +339,44 @@ function App() {
   }
 
   useEffect(() => {
-    const next = liveCourses.map((item, index) => ({
-      id: 100000 + index,
-      area: item.area,
-      grade: Number(item.grade) || 0,
-      code: item.code,
-      name: item.name,
-      professor: item.professor,
-      credit: item.credit,
-      slots: parseSlots(item.time || item.timeEng || item.code),
-      english: item.isEnglish,
-      remarks: item.remark,
-    }))
-    setApiCourses(next)
-    setSelectedIds([])
-  }, [liveCourses])
+    if (liveCourses.length === 0) return
+
+    // Merge newly fetched courses instead of resetting so selections survive across majors
+    setApiCourses((prev) => {
+      const existingByCode = new Map(prev.map((course) => [course.code, course]))
+      const updated = [...prev]
+
+      liveCourses.forEach((item) => {
+        const existing = existingByCode.get(item.code)
+        const course: Course = {
+          id: existing?.id ?? apiCourseIdRef.current++,
+          area: item.area,
+          grade: Number(item.grade) || 0,
+          code: item.code,
+          name: item.name,
+          professor: item.professor,
+          credit: item.credit,
+          slots: parseSlots(item.time || item.timeEng || item.code),
+          english: item.isEnglish,
+          remarks: item.remark,
+          sourceMajor: liveMajor || selectedMajor,
+        }
+
+        if (existing) {
+          const index = updated.findIndex((value) => value.code === item.code)
+          if (index >= 0) {
+            updated[index] = course
+          }
+        } else {
+          updated.push(course)
+        }
+
+        existingByCode.set(item.code, course)
+      })
+
+      return updated
+    })
+  }, [liveCourses, liveMajor, selectedMajor])
 
   useEffect(() => {
     fetch('https://api.github.com/repos/daehyuh/hufs_class_timetable_simulation')
@@ -356,10 +391,15 @@ function App() {
   return (
     <div className="page">
       <header className="page-header">
-        <h1>
-          한국외대 시간표 시물레이션
-        </h1>
-        <p className="repo-description">{repoDescription}</p>
+        <div className="title-row">
+          <img className="site-logo" src="/logo.png" alt="한국외대 시간표 시물레이션 로고" />
+          <div>
+            <h1>
+              한국외대 시간표 시물레이션
+            </h1>
+            <p className="repo-description">{repoDescription}</p>
+          </div>
+        </div>
       </header>
       <section className="panel live-panel">
         <div className="live-grid">
@@ -621,7 +661,7 @@ function App() {
               </span>
             </div>
             <div className="timetable-scroll">
-              <div className="grid">
+              <div className="grid" ref={timetableGridRef}>
                 <div className="cell head sticky"></div>
                 {dayOrder.map((day) => (
                   <div key={day} className="cell head">
