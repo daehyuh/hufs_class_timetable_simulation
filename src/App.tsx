@@ -270,10 +270,13 @@ function App() {
     setExporting(true)
     try {
       const el = target
+      const rect = el.getBoundingClientRect()
       const prevWidth = el.style.width
-      const width = Math.max(el.scrollWidth, el.clientWidth, 1200)
-      const height = el.scrollHeight
+      const prevHeight = el.style.height
+      const width = Math.max(rect.width, el.scrollWidth, el.clientWidth, 1200)
+      const height = Math.ceil(rect.height)
       el.style.width = `${width}px`
+      el.style.height = `${height}px`
       const canvas = await html2canvas(el, {
         backgroundColor: '#050914',
         scale: 3,
@@ -285,6 +288,7 @@ function App() {
         scrollY: 0,
       })
       el.style.width = prevWidth
+      el.style.height = prevHeight
       const url = canvas.toDataURL('image/png')
       const link = document.createElement('a')
       link.href = url
@@ -699,14 +703,15 @@ function App() {
                             : bucket.map((course) => (
                                 <div
                                   key={`${course.id}-${period.num}-${day}`}
-                                  className={`slot-pill ${
-                                    timetable.conflicts.has(course.id) ? 'danger' : ''
-                                  }`}
-                                >
-                                  <span className="slot-name">{course.name}</span>
-                                  <span className="slot-code">{course.code}</span>
-                                </div>
-                              ))}
+                              className={`slot-pill ${
+                                timetable.conflicts.has(course.id) ? 'danger' : ''
+                              }`}
+                            >
+                              <span className="slot-name">{course.name}</span>
+                              <span className="slot-prof">{course.professor}</span>
+                              <span className="slot-code">{course.code}</span>
+                            </div>
+                          ))}
                         </div>
                       )
                     })}

@@ -619,12 +619,13 @@ h1 {
   background: rgba(126, 242, 196, 0.12);
   border: 1px solid rgba(126, 242, 196, 0.4);
   border-radius: 10px;
-  padding: 7px 8px;
+  padding: 8px 10px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   max-width: 100%;
   word-break: break-word;
+  line-height: 1.2;
 }
 
 .slot-pill.danger {
@@ -634,11 +635,17 @@ h1 {
 
 .slot-name {
   font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.slot-prof {
+  color: #d2f7e9;
+  font-size: 0.95rem;
 }
 
 .slot-code {
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .muted {
