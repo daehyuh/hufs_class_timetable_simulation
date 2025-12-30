@@ -531,7 +531,8 @@ function App() {
         </div>
       </section>
 
-      <section className="panel tab-panel">
+      <div className="planner-grid">
+        <section className="panel tab-panel">
         <div className="panel-head">
           <div>
             <p className="subtle">분반 선택</p>
@@ -747,6 +748,8 @@ function App() {
           </div>
         </div>
       </section>
+
+      </div>
 
       {saveModal && (
         <div className="modal-backdrop" role="dialog" aria-modal="true">

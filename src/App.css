@@ -1,5 +1,6 @@
 .page {
-  max-width: 1200px;
+  max-width: 100%;
+  width: 100%;
   margin: 0 auto;
   padding: 20px 20px 48px;
   display: flex;
@@ -235,6 +236,17 @@ h1 {
   flex-wrap: wrap;
 }
 
+.planner-grid {
+  display: grid;
+  grid-template-columns: 0.4fr 0.6fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.planner-grid > .panel {
+  height: 100%;
+}
+
 .layout {
   display: grid;
   grid-template-columns: 1fr;
@@ -453,9 +465,12 @@ h1 {
 }
 
 .timetable-and-saves {
-  display: grid;
-  grid-template-columns: 2fr minmax(260px, 1fr);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   gap: 12px;
+  position: sticky;
+  top: 12px;
 }
 
 .timetable-wrapper {
@@ -464,6 +479,7 @@ h1 {
   overflow: auto;
   background: rgba(255, 255, 255, 0.02);
   box-shadow: var(--shadow);
+  width: 100%;
 }
 
 .timetable-scroll {
@@ -489,6 +505,7 @@ h1 {
   padding: 12px;
   background: rgba(255, 255, 255, 0.02);
   box-shadow: var(--shadow);
+  width: 100%;
 }
 
 .saved-list {
@@ -856,8 +873,18 @@ button {
     grid-template-columns: 1fr;
   }
 
-  .timetable-and-saves {
+  .planner-grid {
     grid-template-columns: 1fr;
+  }
+
+  .timetable-and-saves {
+    align-items: stretch;
+    position: static;
+  }
+
+  .timetable-wrapper,
+  .saved-panel {
+    max-width: 100%;
   }
 }
 
