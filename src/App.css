@@ -719,8 +719,16 @@ button {
   padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid var(--border);
+}
+
+.api-field input {
   background: var(--panel-strong);
   color: #fff;
+}
+
+.api-field select {
+  background: #fff;
+  color: #0a101f;
 }
 
 .radio-row {
